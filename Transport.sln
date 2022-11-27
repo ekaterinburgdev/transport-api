@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransportBackend.Api", "TransportBackend.Api\TransportBackend.Api.csproj", "{49862B65-EEF4-4334-8F32-A39B598217C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transport.Api", "Transport.Api\Transport.Api.csproj", "{49862B65-EEF4-4334-8F32-A39B598217C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
