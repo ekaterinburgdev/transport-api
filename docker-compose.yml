@@ -1,0 +1,14 @@
+version: "3.9"  # optional since v1.27.0
+
+services:
+  dotnet:
+    container_name: dotnet
+    build: ./Transport.Api
+    ports:
+      - ${APP_PORT:-49700}:80
+    env_file:
+      - .env
+    environment:
+      IN_CONTAINER: true
+      ASPNETCORE_ENVIRONMENT: Development
+      # ASPNETCORE_URLS: http://*:3228
