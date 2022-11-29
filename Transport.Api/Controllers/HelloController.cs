@@ -4,7 +4,7 @@ using Transport.Models.Responses.Hello;
 namespace Transport.Controllers;
 
 [ApiController]
-[Route("api/hello")]
+[Route("api/hello-world")]
 public class HelloController : ControllerBase
 {
     [HttpGet]
