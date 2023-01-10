@@ -1,6 +1,11 @@
+using Transport.Clients;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services
+    .AddSingleton<HttpClient>()
+    .AddSingleton<EttuClient>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
