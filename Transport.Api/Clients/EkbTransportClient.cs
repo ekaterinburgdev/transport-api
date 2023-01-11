@@ -1,42 +1,58 @@
-﻿using Transport.Extensions;
+﻿using System.Text;
+using System.Text.Json;
+using Transport.Extensions;
 using Transport.Models.Api;
 using Transport.Models.EkbTransport;
 
 namespace Transport.Clients;
 
-using System.Text;
-using System.Text.Json;
-
 public class EkbTransportClient
 {
-    private const string RequestUri = "http://xn--80axnakf7a.xn--80acgfbsl1azdqr.xn--p1ai/api/rpc.php";
+    private const string BaseUrl = "http://xn--80axnakf7a.xn--80acgfbsl1azdqr.xn--p1ai/api/rpc.php";
 
     private string SessionId { get; set; }
     private int TaskId { get; set; }
-
+    
+    public async Task<Okato[]> GetOkatoList()
+    {
+        return await GetContentAsync<Okato>("getOkatoList");
+    }
+    
     public async Task<TransportInfo[]> GetTransTypes()
     {
-        using var httpClient = new HttpClient();
-        var request = await GetRequest("getTransTypeTree", new Dictionary<string, string>
+        return await GetContentAsync<TransportInfo>("getTransTypeTree", new Dictionary<string, string>
         {
             ["ok_id"] = ""
         });
-        var response = await httpClient.SendAsync(request);
-        response.EnsureSuccessStatusCode();
-        var responseString = await response.Content.ReadAsStringAsync();
-        var result = JsonSerializer.Deserialize<JsonRpcResult<TransportInfo[]>>(responseString, new JsonSerializerOptions
+    }
+    
+    public async Task<T[]> GetContentAsync<T>(string action, Dictionary<string, string>? parameters = null)
+    {
+        var responseString = await GetResponseAsync(action, parameters).ConfigureAwait(false);
+        var result = JsonSerializer.Deserialize<JsonRpcResult<T[]>>(responseString, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
         });
         result.EnsureSuccess();
         return result.Result;
     }
+    
+    public async Task<string> GetResponseAsync(string action, Dictionary<string, string>? parameters = null)
+    {
+        parameters ??= new Dictionary<string, string>();
+        using var httpClient = new HttpClient();
+        var request = await GetRequest(action, parameters);
+        var response = await httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+        var responseString = await response.Content.ReadAsStringAsync();
+        return responseString;
+    }
 
     private async Task<HttpRequestMessage> GetRequest(string action, Dictionary<string, string> parameters)
     {
         if (string.IsNullOrEmpty(SessionId))
             await InitializeSessionId();
-        var request = new HttpRequestMessage(HttpMethod.Post, RequestUri);
+        var request = new HttpRequestMessage(HttpMethod.Post, BaseUrl);
         var json = JsonSerializer.Serialize(new
         {
             id = TaskId++,
@@ -53,7 +69,7 @@ public class EkbTransportClient
 
     private async Task InitializeSessionId()
     {
-        var message = new HttpRequestMessage(HttpMethod.Post, RequestUri);
+        var message = new HttpRequestMessage(HttpMethod.Post, BaseUrl);
         message.Content = new StringContent(JsonSerializer.Serialize(new
         {
             jsonrpc = "2.0",
