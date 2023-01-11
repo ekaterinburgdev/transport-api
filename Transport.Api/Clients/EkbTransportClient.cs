@@ -12,7 +12,16 @@ public class EkbTransportClient
 
     private string SessionId { get; set; }
     private int TaskId { get; set; }
-    
+
+    public async Task<StopInfo[]> GetStopsByName(string stopName)
+    {
+        return await GetContentAsync<StopInfo>("getStopsByName", new Dictionary<string, string>
+        {
+            ["str"] = stopName,
+            ["ok_id"] = ""
+        }).ConfigureAwait(false);
+    }
+
     public async Task<RegionCenter[]> GetRegionCenter()
     {
         return await GetContentAsync<RegionCenter>("getRegionCenter", new Dictionary<string, string>
