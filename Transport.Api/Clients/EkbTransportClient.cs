@@ -13,6 +13,14 @@ public class EkbTransportClient
     private string SessionId { get; set; }
     private int TaskId { get; set; }
     
+    public async Task<RegionCenter[]> GetRegionCenter()
+    {
+        return await GetContentAsync<RegionCenter>("getRegionCenter", new Dictionary<string, string>
+        {
+            ["ok_id"] = ""
+        }).ConfigureAwait(false);
+    }
+    
     public async Task<Okato[]> GetOkatoList()
     {
         return await GetContentAsync<Okato>("getOkatoList");
@@ -25,8 +33,8 @@ public class EkbTransportClient
             ["ok_id"] = ""
         });
     }
-    
-    public async Task<T[]> GetContentAsync<T>(string action, Dictionary<string, string>? parameters = null)
+
+    private async Task<T[]> GetContentAsync<T>(string action, Dictionary<string, string>? parameters = null)
     {
         var responseString = await GetResponseAsync(action, parameters).ConfigureAwait(false);
         var result = JsonSerializer.Deserialize<JsonRpcResult<T[]>>(responseString, new JsonSerializerOptions
@@ -36,8 +44,8 @@ public class EkbTransportClient
         result.EnsureSuccess();
         return result.Result;
     }
-    
-    public async Task<string> GetResponseAsync(string action, Dictionary<string, string>? parameters = null)
+
+    private async Task<string> GetResponseAsync(string action, Dictionary<string, string>? parameters = null)
     {
         parameters ??= new Dictionary<string, string>();
         using var httpClient = new HttpClient();
