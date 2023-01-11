@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using System.Text.Json;
 using Transport.Extensions;
 using Transport.Models.Api;
@@ -12,6 +13,17 @@ public class EkbTransportClient
 
     private string SessionId { get; set; }
     private int TaskId { get; set; }
+
+    public async Task<StopInfo[]> GetStopsInRectangle(double minLatitude, double maxLatitude, double minLongitude, double maxLongitude)
+    {
+        return await GetContentAsync<StopInfo>("getStopsInRect", new Dictionary<string, string>
+        {
+            ["minlat"] = minLatitude.ToString(CultureInfo.InvariantCulture),
+            ["maxlat"] = maxLatitude.ToString(CultureInfo.InvariantCulture),
+            ["minlong"] = minLongitude.ToString(CultureInfo.InvariantCulture),
+            ["maxlong"] = maxLongitude.ToString(CultureInfo.InvariantCulture)
+        }).ConfigureAwait(false); 
+    }
 
     public async Task<StopInfo[]> GetStopsByName(string stopName)
     {
@@ -49,6 +61,7 @@ public class EkbTransportClient
         var result = JsonSerializer.Deserialize<JsonRpcResult<T[]>>(responseString, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
+            MaxDepth = 10
         });
         result.EnsureSuccess();
         return result.Result;
