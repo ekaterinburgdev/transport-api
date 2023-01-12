@@ -1,6 +1,6 @@
-﻿namespace Transport.Models.EkbTransport;
+﻿namespace Transport.Models.EkbTransport.Stop;
 
-public class ArriveInfo
+public class StopArriveInfo
 {
     public string Mr_Id { get; set; }
     public string Mr_Num { get; set; }

@@ -1,4 +1,4 @@
-﻿namespace Transport.Models.EkbTransport;
+﻿namespace Transport.Models.EkbTransport.Unit;
 
 public class UnitInfo
 {

@@ -4,6 +4,8 @@ using System.Text.Json;
 using Transport.Extensions;
 using Transport.Models.Api;
 using Transport.Models.EkbTransport;
+using Transport.Models.EkbTransport.Stop;
+using Transport.Models.EkbTransport.Unit;
 
 namespace Transport.Clients;
 
@@ -14,9 +16,17 @@ public class EkbTransportClient
     private string SessionId { get; set; }
     private int TaskId { get; set; }
     
-    public async Task<ArriveInfo[]> GetStopArrive(int stopId)
+    public async Task<UnitArriveInfo[]> GetUnitArrive(string unitId)
     {
-        return await GetContentAsync<ArriveInfo>("getStopArrive", new Dictionary<string, string>
+        return await GetContentAsync<UnitArriveInfo>("getUnitArrive", new Dictionary<string, string>
+        {
+            ["u_id"] = unitId,
+        }).ConfigureAwait(false); 
+    }
+    
+    public async Task<StopArriveInfo[]> GetStopArrive(int stopId)
+    {
+        return await GetContentAsync<StopArriveInfo>("getStopArrive", new Dictionary<string, string>
         {
             ["st_id"] = stopId.ToString(),
         }).ConfigureAwait(false); 
