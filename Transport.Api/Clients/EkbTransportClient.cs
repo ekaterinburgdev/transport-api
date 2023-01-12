@@ -16,6 +16,15 @@ public class EkbTransportClient
     private string SessionId { get; set; }
     private int TaskId { get; set; }
     
+    public async Task<RaceTree[]> GetRaceTree(string mrId, DateOnly date)
+    {
+        return await GetContentAsync<RaceTree>("getRaceTree", new Dictionary<string, string>
+        {
+            ["mr_id"] = mrId,
+            ["data"] = date.ToString("yyyy-MM-dd")
+        }).ConfigureAwait(false); 
+    }
+    
     public async Task<UnitArriveInfo[]> GetUnitArrive(string unitId)
     {
         return await GetContentAsync<UnitArriveInfo>("getUnitArrive", new Dictionary<string, string>
