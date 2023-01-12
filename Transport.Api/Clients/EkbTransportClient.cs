@@ -14,6 +14,14 @@ public class EkbTransportClient
     private string SessionId { get; set; }
     private int TaskId { get; set; }
     
+    public async Task<ArriveInfo[]> GetStopArrive(int stopId)
+    {
+        return await GetContentAsync<ArriveInfo>("getStopArrive", new Dictionary<string, string>
+        {
+            ["st_id"] = stopId.ToString(),
+        }).ConfigureAwait(false); 
+    }
+    
     public async Task<UnitInfo[]> GetUnitsInRectangle(double minLatitude, double maxLatitude, double minLongitude, double maxLongitude)
     {
         return await GetContentAsync<UnitInfo>("getUnitsInRect", new Dictionary<string, string>
