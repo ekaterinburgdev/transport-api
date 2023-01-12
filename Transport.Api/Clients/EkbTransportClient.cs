@@ -6,6 +6,7 @@ using Transport.Models.Api;
 using Transport.Models.EkbTransport;
 using Transport.Models.EkbTransport.Stop;
 using Transport.Models.EkbTransport.Unit;
+using Route = Transport.Models.EkbTransport.Route;
 
 namespace Transport.Clients;
 
@@ -15,6 +16,15 @@ public class EkbTransportClient
 
     private string SessionId { get; set; }
     private int TaskId { get; set; }
+    
+    public async Task<Route> GetRoute(string mrId)
+    {
+        return await GetContentAsync<Route>("getRoute", new Dictionary<string, string>
+        {
+            ["mr_id"] = mrId,
+        }).ConfigureAwait(false); 
+    }
+    
     
     public async Task<Timetable> GetRaspisanie(string mrId, DateOnly date, string raceType, string kpp, string stopId)
     {
