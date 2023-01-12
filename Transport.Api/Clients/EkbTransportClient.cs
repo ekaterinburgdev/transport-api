@@ -13,6 +13,17 @@ public class EkbTransportClient
 
     private string SessionId { get; set; }
     private int TaskId { get; set; }
+    
+    public async Task<UnitInfo[]> GetUnitsInRectangle(double minLatitude, double maxLatitude, double minLongitude, double maxLongitude)
+    {
+        return await GetContentAsync<UnitInfo>("getUnitsInRect", new Dictionary<string, string>
+        {
+            ["minlat"] = minLatitude.ToString(CultureInfo.InvariantCulture),
+            ["maxlat"] = maxLatitude.ToString(CultureInfo.InvariantCulture),
+            ["minlong"] = minLongitude.ToString(CultureInfo.InvariantCulture),
+            ["maxlong"] = maxLongitude.ToString(CultureInfo.InvariantCulture)
+        }).ConfigureAwait(false); 
+    }
 
     public async Task<StopInfo[]> GetStopsInRectangle(double minLatitude, double maxLatitude, double minLongitude, double maxLongitude)
     {
